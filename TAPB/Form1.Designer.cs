@@ -39,6 +39,7 @@
             this.button_testconnect = new System.Windows.Forms.Button();
             this.button_save = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -50,7 +51,7 @@
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.comboBox_user = new System.Windows.Forms.ComboBox();
             this.button3 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -58,7 +59,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(980, 257);
+            this.button1.Location = new System.Drawing.Point(1003, 119);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(139, 67);
             this.button1.TabIndex = 0;
@@ -68,7 +69,7 @@
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(455, 235);
+            this.richTextBox1.Location = new System.Drawing.Point(729, 245);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.Size = new System.Drawing.Size(413, 325);
             this.richTextBox1.TabIndex = 1;
@@ -84,7 +85,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(874, 257);
+            this.button2.Location = new System.Drawing.Point(1044, 197);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(53, 32);
             this.button2.TabIndex = 3;
@@ -110,6 +111,7 @@
             // 
             this.textBox_Password.Location = new System.Drawing.Point(539, 27);
             this.textBox_Password.Name = "textBox_Password";
+            this.textBox_Password.PasswordChar = '*';
             this.textBox_Password.Size = new System.Drawing.Size(140, 22);
             this.textBox_Password.TabIndex = 6;
             // 
@@ -122,12 +124,13 @@
             // 
             // button_testconnect
             // 
-            this.button_testconnect.Location = new System.Drawing.Point(879, 21);
+            this.button_testconnect.Location = new System.Drawing.Point(961, 21);
             this.button_testconnect.Name = "button_testconnect";
-            this.button_testconnect.Size = new System.Drawing.Size(116, 61);
+            this.button_testconnect.Size = new System.Drawing.Size(140, 90);
             this.button_testconnect.TabIndex = 8;
             this.button_testconnect.Text = "Connect";
             this.button_testconnect.UseVisualStyleBackColor = true;
+            this.button_testconnect.Click += new System.EventHandler(this.button_testconnect_Click);
             // 
             // button_save
             // 
@@ -140,6 +143,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.checkBox1);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
@@ -155,6 +159,17 @@
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Config vCenter server Database";
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(799, 76);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(71, 21);
+            this.checkBox1.TabIndex = 14;
+            this.checkBox1.Text = "Modify";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // label4
             // 
@@ -202,10 +217,10 @@
             this.groupBox2.Controls.Add(this.comboBox2);
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.label5);
-            this.groupBox2.Controls.Add(this.comboBox1);
+            this.groupBox2.Controls.Add(this.comboBox_user);
             this.groupBox2.Location = new System.Drawing.Point(12, 138);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(411, 366);
+            this.groupBox2.Size = new System.Drawing.Size(577, 366);
             this.groupBox2.TabIndex = 11;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Scheduler Config delete log";
@@ -294,13 +309,13 @@
             this.label5.TabIndex = 11;
             this.label5.Text = "Delete log from User";
             // 
-            // comboBox1
+            // comboBox_user
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(155, 36);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(189, 24);
-            this.comboBox1.TabIndex = 0;
+            this.comboBox_user.FormattingEnabled = true;
+            this.comboBox_user.Location = new System.Drawing.Point(155, 36);
+            this.comboBox_user.Name = "comboBox_user";
+            this.comboBox_user.Size = new System.Drawing.Size(378, 24);
+            this.comboBox_user.TabIndex = 0;
             // 
             // button3
             // 
@@ -356,11 +371,12 @@
         private System.Windows.Forms.ComboBox comboBox2;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox comboBox_user;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
 
