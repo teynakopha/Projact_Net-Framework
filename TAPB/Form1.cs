@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 using Npgsql;
 using System.Data.SQLite;
@@ -88,7 +89,20 @@ namespace TAPB
 
         private void button2_Click(object sender, EventArgs e)
         {
-
+            TaskScheduler.Instance.ScheduleTask(16, 12, 0.00417,
+    () =>
+    {
+        InvokeUI(() => {
+            richTextBox1.Text += "Task 1 : " + DateTime.Now + "\n";
+        });
+        
+       // MessageBox.Show("task1: " + DateTime.Now);
+        //here write the code that you want to schedule
+    });
+        }
+        private void InvokeUI(Action a)
+        {
+            this.BeginInvoke(new MethodInvoker(a));
         }
         private void retire_select()
         {
@@ -204,6 +218,10 @@ namespace TAPB
                 textBox_port.ReadOnly = true;
             }
         }
+        public void Test()
+        {
+            MessageBox.Show("f");
+        }
     }
     public class SQLiteOperation
     {
@@ -310,4 +328,34 @@ namespace TAPB
             return locationDatabase;
         }
     }
+    public class TaskScheduler
+    {
+        private static TaskScheduler _instance;
+        private List<System.Threading.Timer> timers = new List<System.Threading.Timer>();
+
+        private TaskScheduler() { }
+
+        public static TaskScheduler Instance => _instance ?? (_instance = new TaskScheduler());
+
+        public void ScheduleTask(int hour, int min, double intervalInHour, Action task)
+        {
+            DateTime now = DateTime.Now;
+            DateTime firstRun = new DateTime(now.Year, now.Month, now.Day, hour, min, 0, 0);
+            if (now > firstRun)
+            {
+                firstRun = firstRun.AddDays(1);
+            }
+
+            TimeSpan timeToGo = firstRun - now;
+            if (timeToGo <= TimeSpan.Zero)
+            {
+                timeToGo = TimeSpan.Zero;
+            }
+
+            var timer = new System.Threading.Timer(x =>{task.Invoke();}, null, timeToGo, TimeSpan.FromHours(intervalInHour));
+
+            timers.Add(timer);
+        }
+    }
+
 }
