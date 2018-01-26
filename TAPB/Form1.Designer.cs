@@ -39,6 +39,7 @@
             this.button_testconnect = new System.Windows.Forms.Button();
             this.button_save = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBox_DBType = new System.Windows.Forms.CheckBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -140,9 +141,11 @@
             this.button_save.TabIndex = 9;
             this.button_save.Text = "save";
             this.button_save.UseVisualStyleBackColor = true;
+            this.button_save.Click += new System.EventHandler(this.button_save_Click);
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.checkBox_DBType);
             this.groupBox1.Controls.Add(this.checkBox1);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label3);
@@ -159,6 +162,16 @@
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Config vCenter server Database";
+            // 
+            // checkBox_DBType
+            // 
+            this.checkBox_DBType.AutoSize = true;
+            this.checkBox_DBType.Location = new System.Drawing.Point(649, 76);
+            this.checkBox_DBType.Name = "checkBox_DBType";
+            this.checkBox_DBType.Size = new System.Drawing.Size(78, 21);
+            this.checkBox_DBType.TabIndex = 15;
+            this.checkBox_DBType.Text = "MSSQL";
+            this.checkBox_DBType.UseVisualStyleBackColor = true;
             // 
             // checkBox1
             // 
@@ -377,6 +390,7 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox checkBox_DBType;
     }
 }
 

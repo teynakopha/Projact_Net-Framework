@@ -10,6 +10,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Npgsql;
 using System.Data.SQLite;
+
 namespace TAPB
 {
     public partial class Form1 : Form
@@ -33,11 +34,12 @@ namespace TAPB
             dateTimePicker1.Format = DateTimePickerFormat.Time;
             dateTimePicker1.ShowUpDown = true;
             setDefault_vCenterDB();
-
+            MethodeTest();
+            checkBox_DBType.Checked = true;
         }
         public void setDefault_vCenterDB()
         {
-            SQLiteOperation setDF = new SQLiteOperation();
+           SQLiteOperation setDF = new SQLiteOperation();
            SQLiteDataReader reader =  setDF.query("select * from vCenterDB");
             while(reader.Read())
             {
@@ -54,7 +56,6 @@ namespace TAPB
         }
         public void connectDB()
         {
-
             try
             {
                 string string_conn = string.Format("Server={0};User Id={1}; Password={2};Database=VCDB;",textBox_ServerIP.Text,
@@ -71,7 +72,6 @@ namespace TAPB
                 while (dr.Read())
                 {
                     comboBox_user.Items.Add(dr[0]);
-
                 }
                 conn.Close();
             }
@@ -86,19 +86,15 @@ namespace TAPB
         {
             connectDB();
         }
-
         private void button2_Click(object sender, EventArgs e)
         {
             TaskScheduler.Instance.ScheduleTask(16, 12, 0.00417,
-    () =>
-    {
-        InvokeUI(() => {
-            richTextBox1.Text += "Task 1 : " + DateTime.Now + "\n";
-        });
-        
-       // MessageBox.Show("task1: " + DateTime.Now);
-        //here write the code that you want to schedule
-    });
+                    () =>
+                            {
+                            InvokeUI(() => {
+                                richTextBox1.Text += "Task 1 : " + DateTime.Now + "\n";
+                            });
+                 });
         }
         private void InvokeUI(Action a)
         {
@@ -136,7 +132,6 @@ namespace TAPB
                 command.ExecuteNonQuery();
                 command.CommandText = string.Format("delete from vpx_event_arg where event_id = {0}", a);
                 command.ExecuteNonQuery();
-
             }
 
             conn.Close();
@@ -159,47 +154,64 @@ namespace TAPB
 
         private void button3_Click(object sender, EventArgs e)
         {
-            SQLiteOperation conn = new SQLiteOperation();
+
         }
 
         private void button_testconnect_Click(object sender, EventArgs e)
         {
-            //update database 
-            if(checkBox1.Checked = true)
+            if(checkBox_DBType.Checked == true)
             {
-                string vcenter_ip = textBox_ServerIP.Text;
-                string vcenter_user = textBox_User.Text;
-                string vcenter_password = textBox_Password.Text;
-                string vcenter_port = textBox_port.Text;
-                string sql = string.Format("update vCenterDB set vcenter_ip='{0}',vcenter_user='{1}'," +
-                    "vcenter_password='{2}',vcenter_port='{3}' where id =1",vcenter_ip,vcenter_user,vcenter_password,vcenter_port);
-                SQLiteOperation update = new SQLiteOperation();
-                update.query(sql);
-                SQLiteOperation setDF = new SQLiteOperation();
-                SQLiteDataReader reader = setDF.query("select * from vCenterDB");
-                
+                VC_DB conn = new VC_DB();
+                conn.connect();
+                var reader = conn.getUser();
                 while (reader.Read())
                 {
-                    textBox_ServerIP.Text = reader[1].ToString();
-                    textBox_User.Text = reader[2].ToString();
-                    textBox_Password.Text = reader[3].ToString();
-                    textBox_port.Text = reader[4].ToString();
+                    comboBox_user.Items.Add(reader[0]);
                 }
-                textBox_ServerIP.ReadOnly = true;
-                textBox_User.ReadOnly = true;
-                textBox_Password.ReadOnly = true;
-                textBox_port.ReadOnly = true;
-                checkBox1.Checked = false;
-                connectDB();
             }
-            else
-            {
-                connectDB();
-            }
-            
-            
+            //update database
+            //if (checkBox1.Checked = true)
+            //{
+            //    string vcenter_ip = textBox_ServerIP.Text;
+            //    string vcenter_user = textBox_User.Text;
+            //    string vcenter_password = textBox_Password.Text;
+            //    string vcenter_port = textBox_port.Text;
+            //    string sql = string.Format("update vCenterDB set vcenter_ip='{0}',vcenter_user='{1}'," +
+            //        "vcenter_password='{2}',vcenter_port='{3}' where id =1", vcenter_ip, vcenter_user, vcenter_password, vcenter_port);
+            //    SQLiteOperation update = new SQLiteOperation();
+            //    update.query(sql);
+            //    SQLiteOperation setDF = new SQLiteOperation();
+            //    SQLiteDataReader reader = setDF.query("select * from vCenterDB");
+
+            //    while (reader.Read())
+            //    {
+            //        textBox_ServerIP.Text = reader[1].ToString();
+            //        textBox_User.Text = reader[2].ToString();
+            //        textBox_Password.Text = reader[3].ToString();
+            //        textBox_port.Text = reader[4].ToString();
+            //    }
+            //    textBox_ServerIP.ReadOnly = true;
+            //    textBox_User.ReadOnly = true;
+            //    textBox_Password.ReadOnly = true;
+            //    textBox_port.ReadOnly = true;
+            //    checkBox1.Checked = false;
+            //    connectDB();
+            //}
+            //else
+            //{
+            //    connectDB();
+            //}
         }
-        
+        private void MethodeTest()
+        {
+            TaskScheduler.Instance.ScheduleTask(16, 23, 1.0,
+        () =>
+        {
+            InvokeUI(() => {
+                richTextBox1.Text += "Task 1 : " + DateTime.Now + "\n";
+            });
+        });
+        }
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBox1.Checked == true)
@@ -222,6 +234,11 @@ namespace TAPB
         {
             MessageBox.Show("f");
         }
+
+        private void button_save_Click(object sender, EventArgs e)
+        {
+
+        }
     }
     public class SQLiteOperation
     {
@@ -231,7 +248,6 @@ namespace TAPB
         {
             if(checkFilesExit())
             {
-               
                 try
                 {
                     connectDB();
@@ -326,6 +342,10 @@ namespace TAPB
         public string getLocationDB()
         {
             return locationDatabase;
+        }
+        public void connect_getuserToForm()
+        {
+
         }
     }
     public class TaskScheduler
