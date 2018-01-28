@@ -29,16 +29,17 @@
         private void InitializeComponent()
         {
             this.button1 = new System.Windows.Forms.Button();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.richTextBox_log = new System.Windows.Forms.RichTextBox();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
             this.button2 = new System.Windows.Forms.Button();
             this.textBox_ServerIP = new System.Windows.Forms.TextBox();
             this.textBox_User = new System.Windows.Forms.TextBox();
             this.textBox_Password = new System.Windows.Forms.TextBox();
-            this.textBox_port = new System.Windows.Forms.TextBox();
+            this.textBox_dbname = new System.Windows.Forms.TextBox();
             this.button_testconnect = new System.Windows.Forms.Button();
             this.button_save = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.button_SaveIP = new System.Windows.Forms.Button();
             this.checkBox_DBType = new System.Windows.Forms.CheckBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -46,10 +47,12 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.button4 = new System.Windows.Forms.Button();
+            this.checkBox_autorun = new System.Windows.Forms.CheckBox();
             this.label8 = new System.Windows.Forms.Label();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.label7 = new System.Windows.Forms.Label();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.comboBox_Day = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.comboBox_user = new System.Windows.Forms.ComboBox();
@@ -60,7 +63,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(1003, 119);
+            this.button1.Location = new System.Drawing.Point(47, 524);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(139, 67);
             this.button1.TabIndex = 0;
@@ -68,17 +71,17 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // richTextBox1
+            // richTextBox_log
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(729, 245);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(413, 325);
-            this.richTextBox1.TabIndex = 1;
-            this.richTextBox1.Text = "";
+            this.richTextBox_log.Location = new System.Drawing.Point(595, 138);
+            this.richTextBox_log.Name = "richTextBox_log";
+            this.richTextBox_log.Size = new System.Drawing.Size(524, 466);
+            this.richTextBox_log.TabIndex = 1;
+            this.richTextBox_log.Text = "";
             // 
             // richTextBox2
             // 
-            this.richTextBox2.Location = new System.Drawing.Point(822, 127);
+            this.richTextBox2.Location = new System.Drawing.Point(252, 510);
             this.richTextBox2.Name = "richTextBox2";
             this.richTextBox2.Size = new System.Drawing.Size(175, 102);
             this.richTextBox2.TabIndex = 2;
@@ -86,7 +89,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(1044, 197);
+            this.button2.Location = new System.Drawing.Point(457, 572);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(53, 32);
             this.button2.TabIndex = 3;
@@ -116,12 +119,12 @@
             this.textBox_Password.Size = new System.Drawing.Size(140, 22);
             this.textBox_Password.TabIndex = 6;
             // 
-            // textBox_port
+            // textBox_dbname
             // 
-            this.textBox_port.Location = new System.Drawing.Point(788, 27);
-            this.textBox_port.Name = "textBox_port";
-            this.textBox_port.Size = new System.Drawing.Size(75, 22);
-            this.textBox_port.TabIndex = 7;
+            this.textBox_dbname.Location = new System.Drawing.Point(788, 27);
+            this.textBox_dbname.Name = "textBox_dbname";
+            this.textBox_dbname.Size = new System.Drawing.Size(109, 22);
+            this.textBox_dbname.TabIndex = 7;
             // 
             // button_testconnect
             // 
@@ -135,7 +138,7 @@
             // 
             // button_save
             // 
-            this.button_save.Location = new System.Drawing.Point(252, 231);
+            this.button_save.Location = new System.Drawing.Point(323, 258);
             this.button_save.Name = "button_save";
             this.button_save.Size = new System.Drawing.Size(92, 71);
             this.button_save.TabIndex = 9;
@@ -145,6 +148,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.button_SaveIP);
             this.groupBox1.Controls.Add(this.checkBox_DBType);
             this.groupBox1.Controls.Add(this.checkBox1);
             this.groupBox1.Controls.Add(this.label4);
@@ -155,13 +159,23 @@
             this.groupBox1.Controls.Add(this.textBox_User);
             this.groupBox1.Controls.Add(this.button_testconnect);
             this.groupBox1.Controls.Add(this.textBox_Password);
-            this.groupBox1.Controls.Add(this.textBox_port);
+            this.groupBox1.Controls.Add(this.textBox_dbname);
             this.groupBox1.Location = new System.Drawing.Point(12, 2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(1107, 119);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Config vCenter server Database";
+            // 
+            // button_SaveIP
+            // 
+            this.button_SaveIP.Location = new System.Drawing.Point(810, 67);
+            this.button_SaveIP.Name = "button_SaveIP";
+            this.button_SaveIP.Size = new System.Drawing.Size(75, 33);
+            this.button_SaveIP.TabIndex = 16;
+            this.button_SaveIP.Text = "Save";
+            this.button_SaveIP.UseVisualStyleBackColor = true;
+            this.button_SaveIP.Click += new System.EventHandler(this.button_SaveIP_Click);
             // 
             // checkBox_DBType
             // 
@@ -176,7 +190,7 @@
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(799, 76);
+            this.checkBox1.Location = new System.Drawing.Point(733, 76);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(71, 21);
             this.checkBox1.TabIndex = 14;
@@ -189,9 +203,9 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(691, 28);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(94, 17);
+            this.label4.Size = new System.Drawing.Size(66, 17);
             this.label4.TabIndex = 13;
-            this.label4.Text = "Port(optional)";
+            this.label4.Text = "DB name";
             this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // label3
@@ -223,11 +237,13 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.button4);
+            this.groupBox2.Controls.Add(this.checkBox_autorun);
             this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Controls.Add(this.dateTimePicker1);
             this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.Controls.Add(this.button_save);
-            this.groupBox2.Controls.Add(this.comboBox2);
+            this.groupBox2.Controls.Add(this.comboBox_Day);
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Controls.Add(this.comboBox_user);
@@ -237,6 +253,26 @@
             this.groupBox2.TabIndex = 11;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Scheduler Config delete log";
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(453, 258);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(99, 71);
+            this.button4.TabIndex = 18;
+            this.button4.Text = "Submit Job";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // checkBox_autorun
+            // 
+            this.checkBox_autorun.AutoSize = true;
+            this.checkBox_autorun.Location = new System.Drawing.Point(409, 193);
+            this.checkBox_autorun.Name = "checkBox_autorun";
+            this.checkBox_autorun.Size = new System.Drawing.Size(89, 21);
+            this.checkBox_autorun.TabIndex = 17;
+            this.checkBox_autorun.Text = "Auto Run";
+            this.checkBox_autorun.UseVisualStyleBackColor = true;
             // 
             // label8
             // 
@@ -249,6 +285,7 @@
             // 
             // dateTimePicker1
             // 
+            this.dateTimePicker1.AllowDrop = true;
             this.dateTimePicker1.CustomFormat = "HH:mm";
             this.dateTimePicker1.Location = new System.Drawing.Point(155, 155);
             this.dateTimePicker1.Name = "dateTimePicker1";
@@ -264,10 +301,11 @@
             this.label7.TabIndex = 14;
             this.label7.Text = "วัน";
             // 
-            // comboBox2
+            // comboBox_Day
             // 
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Items.AddRange(new object[] {
+            this.comboBox_Day.FormattingEnabled = true;
+            this.comboBox_Day.Items.AddRange(new object[] {
+            "0",
             "1",
             "2",
             "3",
@@ -299,10 +337,10 @@
             "29",
             "30",
             "31"});
-            this.comboBox2.Location = new System.Drawing.Point(154, 101);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(189, 24);
-            this.comboBox2.TabIndex = 13;
+            this.comboBox_Day.Location = new System.Drawing.Point(154, 101);
+            this.comboBox_Day.Name = "comboBox_Day";
+            this.comboBox_Day.Size = new System.Drawing.Size(189, 24);
+            this.comboBox_Day.TabIndex = 13;
             // 
             // label6
             // 
@@ -332,7 +370,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(741, 127);
+            this.button3.Location = new System.Drawing.Point(465, 533);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
             this.button3.TabIndex = 12;
@@ -349,7 +387,7 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.richTextBox2);
-            this.Controls.Add(this.richTextBox1);
+            this.Controls.Add(this.richTextBox_log);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.groupBox1);
             this.Name = "Form1";
@@ -366,13 +404,13 @@
         #endregion
 
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.RichTextBox richTextBox_log;
         private System.Windows.Forms.RichTextBox richTextBox2;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TextBox textBox_ServerIP;
         private System.Windows.Forms.TextBox textBox_User;
         private System.Windows.Forms.TextBox textBox_Password;
-        private System.Windows.Forms.TextBox textBox_port;
+        private System.Windows.Forms.TextBox textBox_dbname;
         private System.Windows.Forms.Button button_testconnect;
         private System.Windows.Forms.Button button_save;
         private System.Windows.Forms.GroupBox groupBox1;
@@ -381,7 +419,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.ComboBox comboBox_Day;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox comboBox_user;
@@ -391,6 +429,9 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.CheckBox checkBox_DBType;
+        private System.Windows.Forms.CheckBox checkBox_autorun;
+        private System.Windows.Forms.Button button_SaveIP;
+        private System.Windows.Forms.Button button4;
     }
 }
 

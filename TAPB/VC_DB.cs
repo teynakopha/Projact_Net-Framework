@@ -12,9 +12,9 @@ namespace TAPB
     class VC_DB
     {
         string connectionString  = "Data Source=10.10.10.176;Initial Catalog=vcenterdb;User ID=sa;Password=P@ssw0rd";
-        List<Int32> event_id = new List<Int32>();
+        List<Int16> event_id = new List<Int16>();
         SqlConnection connection = new SqlConnection();
-
+        WriteLog log = new WriteLog();
         public VC_DB()
         {
             
@@ -30,7 +30,7 @@ namespace TAPB
             {
                 conn.Open();
                 connection = conn;
-                MessageBox.Show(getConnectionString());
+
             }
             catch (SqlException e)
             {
@@ -59,6 +59,7 @@ namespace TAPB
         {
             string sql = "select distinct username from vpx_event where username is not null";
             var reader = query(sql);
+            log.writeLog("Get all user from vCenter db Complated");
             return reader;
         }
         public void close()
@@ -70,34 +71,28 @@ namespace TAPB
            var event_id = selectIDbyUser(_day, _user);
             deleteLog(event_id);
         }
-        public void deleteLog(List<Int32> _event_id)
+        public void deleteLog(List<Int16> _event_id)
         {
             var conn = connect();
-            conn.Open();   
+   
             foreach (int temp_id in _event_id)
             {
-                try
-                {
                     string vpx_delete = string.Format("delete from vpx_event where event_id = {0}", temp_id);
                     SqlCommand cmd = new SqlCommand(vpx_delete,conn);
+                    cmd.ExecuteNonQuery();
                     string vpx_arg_delete = string.Format("delete from vpx_event_arg where event_id = {0}", temp_id);
+                    log.writeLog(vpx_arg_delete);
                     cmd.CommandText = vpx_arg_delete;
                     cmd.ExecuteNonQuery();
-
-                }
-                catch (SqlException e)
-                {
-                    MessageBox.Show(e.ToString());
-                }
             }
             conn.Close();
         }
-        public List<Int32> selectIDbyUser(int daylog,string user)
+        public List<Int16> selectIDbyUser(int daylog,string user)
         {
              var conn = connect();
-            conn.Open();
             string sql =string.Format("select event_id from vpx_event where DATEDIFF(DAY, create_time AT TIME ZONE 'North Asia Standard Time', GETDATE() AT TIME ZONE 'North Asia Standard Time') >= {0} and USERNAME = '{1}'",daylog,user);
-            SqlCommand command = new SqlCommand("select distinct username from vpx_event;", conn);
+            SqlCommand command = new SqlCommand(sql, conn);
+            MessageBox.Show(sql);
             SqlDataReader dr = command.ExecuteReader();
             while (dr.Read())
             {
@@ -105,6 +100,10 @@ namespace TAPB
             }
             return event_id;
             conn.Close();
+        }
+        public void getDBlog(RichTextBox msg)
+        {
+            msg.Text += log.getLog();
         }
     }
 }

@@ -10,6 +10,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Npgsql;
 using System.Data.SQLite;
+using System.ServiceProcess;
 
 namespace TAPB
 {
@@ -23,6 +24,7 @@ namespace TAPB
         public Form1()
         {
             InitializeComponent();
+            
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -31,11 +33,13 @@ namespace TAPB
         }
         public void InitiaForm()
         {
-            dateTimePicker1.Format = DateTimePickerFormat.Time;
+            dateTimePicker1.Format = DateTimePickerFormat.Custom;
+            dateTimePicker1.CustomFormat = "HH:mm";
             dateTimePicker1.ShowUpDown = true;
             setDefault_vCenterDB();
-            MethodeTest();
             checkBox_DBType.Checked = true;
+
+           
         }
         public void setDefault_vCenterDB()
         {
@@ -46,12 +50,15 @@ namespace TAPB
                 textBox_ServerIP.Text = reader[1].ToString();
                 textBox_User.Text = reader[2].ToString();
                 textBox_Password.Text = reader[3].ToString();
-                textBox_port.Text = reader[4].ToString();
+                textBox_dbname.Text = reader[4].ToString();
             }
+            DateTime time = DateTime.Now;
+
             textBox_ServerIP.ReadOnly = true;
             textBox_User.ReadOnly = true;
             textBox_Password.ReadOnly = true;
-            textBox_port.ReadOnly = true;
+            textBox_dbname.ReadOnly = true;
+            setDF.getLogDB(richTextBox_log);
 
         }
         public void connectDB()
@@ -62,7 +69,7 @@ namespace TAPB
                     textBox_User.Text,textBox_Password.Text);
                 MessageBox.Show(string_conn);
                 NpgsqlConnection conn = new NpgsqlConnection(string_conn);
-                richTextBox1.Text = "success";
+                richTextBox_log.Text = "success";
                 conn.Open();
 
                 // Define a query returning a single row result set
@@ -77,7 +84,7 @@ namespace TAPB
             }
             catch (Exception e)
             {
-                richTextBox1.Text = e.ToString();
+                richTextBox_log.Text = e.ToString();
             }
 
         }
@@ -92,7 +99,7 @@ namespace TAPB
                     () =>
                             {
                             InvokeUI(() => {
-                                richTextBox1.Text += "Task 1 : " + DateTime.Now + "\n";
+                                richTextBox_log.Text += "Task 1 : " + DateTime.Now + "\n";
                             });
                  });
         }
@@ -126,7 +133,7 @@ namespace TAPB
             conn.Open();
             foreach (int a in eventid)
             {
-                richTextBox1.Text += " delete id :" + a + "\n";
+                richTextBox_log.Text += " delete id :" + a + "\n";
                 vpx_delete = string.Format("delete from vpx_event where event_id = {0}", a);
                 NpgsqlCommand command = new NpgsqlCommand(vpx_delete, conn);
                 command.ExecuteNonQuery();
@@ -154,7 +161,22 @@ namespace TAPB
 
         private void button3_Click(object sender, EventArgs e)
         {
+            
 
+        }
+        private void createService(object data)
+        {
+#if DEBUG
+            RapidClean_database myservice = new RapidClean_database();
+            myservice.deleteEvent();
+            System.Threading.Thread.Sleep(System.Threading.Timeout.Infinite);
+#else
+            ServiceBase[] ServiceToRun;
+            ServiceToRun = new ServiceBase[] {
+                new RapidClean_database()
+            };
+            ServiceBase.Run(ServiceToRun);
+#endif
         }
 
         private void button_testconnect_Click(object sender, EventArgs e)
@@ -162,11 +184,20 @@ namespace TAPB
             if(checkBox_DBType.Checked == true)
             {
                 VC_DB conn = new VC_DB();
-                conn.connect();
-                var reader = conn.getUser();
-                while (reader.Read())
+                try
                 {
-                    comboBox_user.Items.Add(reader[0]);
+                    conn.connect();
+                    var reader = conn.getUser();
+                    while (reader.Read())
+                    {
+                        comboBox_user.Items.Add(reader[0]);
+                    }
+                    MessageBox.Show("Connect to Database is Complated");
+                    conn.getDBlog(richTextBox_log);
+                }
+                catch (Exception g)
+                {
+                    MessageBox.Show(g.ToString());
                 }
             }
             //update database
@@ -208,7 +239,7 @@ namespace TAPB
         () =>
         {
             InvokeUI(() => {
-                richTextBox1.Text += "Task 1 : " + DateTime.Now + "\n";
+                richTextBox_log.Text += "Task 1 : " + DateTime.Now + "\n";
             });
         });
         }
@@ -219,7 +250,7 @@ namespace TAPB
                 textBox_ServerIP.ReadOnly = false;
                 textBox_User.ReadOnly = false;
                 textBox_Password.ReadOnly = false;
-                textBox_port.ReadOnly = false;
+                textBox_dbname.ReadOnly = false;
 
             }
             else
@@ -227,7 +258,7 @@ namespace TAPB
                 textBox_ServerIP.ReadOnly = true;
                 textBox_User.ReadOnly = true;
                 textBox_Password.ReadOnly = true;
-                textBox_port.ReadOnly = true;
+                textBox_dbname.ReadOnly = true;
             }
         }
         public void Test()
@@ -237,13 +268,61 @@ namespace TAPB
 
         private void button_save_Click(object sender, EventArgs e)
         {
+            SQLiteOperation conn = new SQLiteOperation();
+            var check = true;
+            string user = comboBox_user.Text;
+            
+            string time = dateTimePicker1.Text;
+            int autorun_check;
+            if (checkBox_autorun.Checked)
+            {
+                autorun_check = 1;
+            }
+            else
+                autorun_check = 0;
+            
+            int day = Convert.ToInt16(comboBox_Day.Text);
+            if (check)
+            {
+                
+                string sql = string.Format("update Scheduler set sc_user = '{0}',sc_time='{1}',sc_day = {2},sc_autorun={3} where sc_id =1 ;",
+                    user,time,day,autorun_check);
+                conn.query(sql);
+                richTextBox_log.Text += DateTime.Now.ToString() + " : update job scheduler is complated \n";
+                MessageBox.Show("update is complated");
+            }
+            else
+            {
+                MessageBox.Show("Task insert db");
+                string sql = string.Format("insert into Scheduler(sc_user,sc_time,sc_day,sc_autorun) values('{0}','{1}',{2},{3});", user, time, day,autorun_check);
+                conn.query(sql);
+                
+            }
 
+        }
+
+        private void button_SaveIP_Click(object sender, EventArgs e)
+        {
+           string server_ip =  textBox_ServerIP.Text;
+            string user = textBox_User.Text;
+            string password = textBox_Password.Text;
+            string dbname = textBox_dbname.Text;
+            SQLiteOperation db = new SQLiteOperation();
+            db.updateIP_DB(server_ip,user,password,dbname);
+            checkBox1.Checked = false;
+            db.getLogDB(richTextBox_log);
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Thread newThread = new Thread(createService);
+            newThread.Start();
         }
     }
     public class SQLiteOperation
     {
+        WriteLog log = new WriteLog();
         string locationDatabase = String.Format("{0}\\Config.db", System.Environment.CurrentDirectory);
-        string log = "";
         public SQLiteOperation()
         {
             if(checkFilesExit())
@@ -292,19 +371,22 @@ namespace TAPB
         }
         private void createDB()
         {
-            
             SQLiteConnection.CreateFile(locationDatabase);
             createTable();
             insertDefault();
         }
+
         private void createTable()
         {
             string sql = "create table vCenterDB (id integer primary key autoincrement,vcenter_ip varchar(20),vcenter_user varchar(20),vcenter_password " +
-                " varchar(20),vcenter_port int)";
+                " varchar(20),vcenter_dbname varchar(20))";
+            string sqlScheduler = "create table Scheduler(sc_id integer primary key autoincrement,sc_user vachar(40),sc_time varchar(20),sc_day integer,sc_autorun bool)";
             try
             {
                 SQLiteConnection connection = connectDB();
                 SQLiteCommand command = new SQLiteCommand(sql, connection);
+                command.ExecuteNonQuery();
+                command.CommandText = sqlScheduler;
                 command.ExecuteNonQuery();
                 connection.Close();
             }
@@ -319,7 +401,7 @@ namespace TAPB
             try
             {
                 string sql = "insert into vCenterDB(vcenter_ip," +
-        "vcenter_user,vcenter_password,vcenter_port) values('10.10.10.222','postgres','QK5F#&2IH}dwmkjN',5432); ";
+        "vcenter_user,vcenter_password,vcenter_dbname) values('10.10.10.176','sa','P@ssw0rd','vcenterdb'); ";
                 SQLiteConnection connection = connectDB();
                 SQLiteCommand cmd = new SQLiteCommand(sql, connection);
                 cmd.ExecuteNonQuery();
@@ -331,22 +413,40 @@ namespace TAPB
             }
 
         }
+        public void updateIP_DB(string _ip,string user,string password,string dbname)
+        {
+            SQLiteConnection conn = connectDB();
+            string sql = string.Format("update vCenterDB set vcenter_ip = '{0}',vcenter_user = '{1}'," +
+                "vcenter_password = '{2}',vcenter_dbname='{3}' where id = 1;", _ip, user, password, dbname);
+            SQLiteCommand cmd = new SQLiteCommand(sql, conn);
+            cmd.ExecuteNonQuery();
+            log.writeLog("update vcenter db complated");
+            conn.Close();
+        }
         public SQLiteDataReader query(string sql)
         {
-            SQLiteConnection connection =  connectDB();
+            SQLiteConnection connection = connectDB();
+
             SQLiteCommand cmd = new SQLiteCommand(sql, connection);
             SQLiteDataReader reader = cmd.ExecuteReader();
             return reader;
             connection.Close();
+
         }
         public string getLocationDB()
         {
             return locationDatabase;
         }
+
         public void connect_getuserToForm()
         {
 
         }
+        public void getLogDB(RichTextBox msg)
+        {
+            msg.Text = log.getLog();
+        }
+
     }
     public class TaskScheduler
     {
