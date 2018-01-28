@@ -5,3 +5,4 @@
 #------------------------service --------------------------------------------- 
 1.จะมีการเข้าไปโหลด การทำงานของ config ที่อยู่บน sql table scheduler 
 2.ถ้า field auto_run = true จะทำการ run ลบ event บน vc by user ที่เรา config ตอนเริ่มใช้งานโปรแกรมจะ ไม่มีการ enable autorun ไว้
+;
